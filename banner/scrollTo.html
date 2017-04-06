@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>屏幕滑动</title>
+  <style media="screen">
+    *{
+      margin:0;
+      padding:0;
+    }
+    body,html{
+      height:100%;
+    }
+    .container{
+      position: relative;
+      height:100%;
+    }
+    #point{
+      position: absolute;
+      top:100px;
+      left:10px;
+      list-style: none;
+    }
+    #point li{
+      width:50px;
+      height:50px;
+      text-align:center;
+      line-height:50px;
+      color:#fff;
+      font-size:0.9em;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #point li:nth-child(1){background:#17A05E;}
+    #point li:nth-child(2){background:#E4756B;}
+    #point li:nth-child(3){background:#FFCE42;}
+    #point li:nth-child(4){background:#4C8BF5;}
+
+    .page{
+      height:100%;
+    }
+    div.page:nth-child(2){background:#17A05E;}
+    div.page:nth-child(3){background:#E4756B;}
+    div.page:nth-child(4){background:#FFCE42;}
+    div.page:nth-child(5){background:#4C8BF5;}
+
+    #top-btn{
+      position: fixed;
+      bottom:150px;
+      right:20px;
+      color:#fff;
+      text-decoration: none;
+      padding:10px;
+      font-weight:bold;
+      font-size:0.8em;
+      border-radius:40px 40px 50% 50%;
+      box-shadow:0 0 10px rgba(255, 255, 255, 0.5) inset,0 0 5px rgba(0, 0, 0, 1),0 0 20px rgba(0, 0, 0, 0.6);
+      background:rgba(255, 255, 255, 0.1);
+      display:none;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <ul id="point">
+    <li>第一页</li>
+    <li>第二页</li>
+    <li>第三页</li>
+    <li>第四页</li>
+  </ul>
+  <div class="page"></div>
+  <div class="page"></div>
+  <div class="page"></div>
+  <div class="page"></div>
+  <a id="top-btn" href="javascript:void(0);">顶部</a>
+</div>
+<script type="text/javascript">
+  //获得元素的属性值　利用原型注册一个共用函数
+  Object.prototype.getStyle = function(attr){
+    return this.currentStyle?this.currentStyle[attr]:window.getComputedStyle(this)[attr];
+  }
+
+  var point   = document.querySelector('#point');
+  point.initTop = parseInt(point.getStyle('top'));
+  var pointLi = point.children;
+  var pages   = document.getElementsByClassName('page');
+  var toTop   = document.getElementById('top-btn');
+  var line = 100;
+  //滚轮事件
+  window.onscroll = function(){
+       move(point,getScroll().top+point.initTop);
+       toTop.style.display = getScroll().top>line?"block":"none";
+  }
+  //回到顶部
+  toTop.onclick = function(){
+    moveWin(0);
+  }
+  //page click
+  for(var i=0,len=pages.length;i<len;i++){
+     (function(i){
+       pointLi[i].onclick = function(){
+         moveWin(parseInt(pages[i].getStyle('height'))*i);
+       }
+     })(i);
+  }
+  //获得window的scrollTop的函数
+  function getScroll(){
+    if(window.pageXOffset){
+      return {
+        top:window.pageYOffset,
+        left:window.pageXOffset
+      };
+    }else if(document.body.scrollTop){
+      return {
+        top:document.body.scrollTop,
+        left:document.body.scrollLeft
+      };
+    }else{
+      return {
+        top:document.documentElement.scrollTop,
+        left:document.documentElement.scrollLeft
+      };
+    }
+  }
+  //窗口移动动画
+  function moveWin(target){
+    clearInterval(window.timer);
+    var speed;
+    window.timer = setInterval(function(){
+        speed = (target-getScroll().top)/10;
+        speed = speed = speed>0?Math.ceil(speed):Math.floor(speed);
+        window.scrollTo(0,getScroll().top+speed);
+        if(getScroll().top==target){
+          clearInterval(window.timer);
+        }
+    },20);
+  }
+  //动画效果
+  function move(obj,target){
+    clearInterval(obj.timer);
+    var speed;
+    obj.timer = setInterval(function(){
+           speed = (target-obj.offsetTop)/10;
+           speed = speed>0?Math.ceil(speed):Math.floor(speed);
+           obj.style.top = obj.offsetTop+speed+"px";
+           if(obj.offsetTop==target){
+             clearInterval(obj.timer);
+           }
+    },20);
+  }
+</script>
+</body>
+</html>

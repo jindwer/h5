@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>玻璃</title>
+  <style media="screen">
+    *{
+      margin:0;
+      padding: 0;
+    }
+    .container{
+      width:240px;
+      height:360px;
+      margin:100px auto;
+      background-image:url(1.jpg);
+      background-repeat:no-repeat;
+      background-size:100%;
+      position: relative;
+    }
+    .cover{
+      width:100%;
+      height:100%;
+      /*background:#D5ECF4;*/
+      opacity: 0.8;
+      background:#D5ECF4;
+    }
+    #canvas{
+      position: absolute;
+      top:0;
+      left:0;
+    }
+    button{
+      display: block;
+      width:80px;
+      height:30px;
+      background:#68B38F;
+      border:1px solid #68B38F;
+      font-weight:bold;
+      font-size:16px;
+      color:#fff;
+      border-radius:5px;
+      cursor:pointer;
+      margin:10px auto;
+      outline:none;
+    }
+    button:hover{
+      background:#18A15F;
+      border-color:#18A15F;
+    }
+  </style>
+</head>
+<body>
+ <div class="container">
+    <div class="cover"></div>
+    <canvas id="canvas"></canvas>
+ </div>
+ <button type="button" id="btn">重置</button>
+
+  <script type="text/javascript">
+    var contain  = document.querySelector('.container');
+    var btn      = document.getElementById('btn');
+    var canvas   = document.getElementById('canvas');
+    var cxt      = canvas.getContext('2d');
+    var imgData  = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg'];
+    var imgDom   = [];
+    canvas.width = parseInt(window.getComputedStyle(contain).width);
+    canvas.height= parseInt(window.getComputedStyle(contain).height);
+    var max      = Math.ceil(Math.sqrt(Math.pow(canvas.width,2)+Math.pow(canvas.height,2)));
+    //加载img　doc
+    var img = null;
+    for(var i=0,len=imgData.length;i<len;i++){
+      img = new Image();
+      img.src = imgData[i];
+      imgDom.push(img);
+    }
+    img = imgDom[0];
+    cxt.strokeStyle = "transparent";
+    img.onload = function(){
+      randomClip(false);
+
+      btn.onclick = function(){
+        var i = parseInt(Math.random()*imgData.length);
+        img = imgDom[i];
+        contain.style.backgroundImage = "url("+imgData[i]+")";
+        randomClip(false);
+      };
+
+      canvas.onmousemove = function(e){
+        e = e||window.event;
+        var clipX = contain.offsetLeft+randomClip.x;
+        var clipY = contain.offsetTop+randomClip.y;
+        if(e.pageX>clipX-randomClip.r&&e.pageX<clipX+randomClip.r*2){
+          if(e.pageY>clipY-randomClip.r&&e.pageY<clipY+randomClip.r*2){
+              this.style.cursor = "pointer";
+          }else{
+              this.style.cursor = "auto";
+          }
+        }else{
+          this.style.cursor = "auto";
+        }
+      }
+      canvas.onclick = function(e){
+        e = e||window.event;
+        var x = e.pageX;
+        var y = e.pageY;
+        var clipX = contain.offsetLeft+randomClip.x;
+        var clipY = contain.offsetTop+randomClip.y;
+        if(e.pageX>clipX-randomClip.r&&e.pageX<clipX+randomClip.r*2){
+          if(e.pageY>clipY-randomClip.r&&e.pageY<clipY+randomClip.r*2){
+            change();
+          }
+        }
+      };
+    };
+
+    function randomClip(flag,speed){
+      if(!flag){
+        clearInterval(change.timer);
+        randomClip.r = Math.random()*80+10;
+        randomClip.x = Math.random()*(canvas.width-2*randomClip.r)+randomClip.r;
+        randomClip.y = Math.random()*(canvas.height-2*randomClip.r)+randomClip.r;
+      }else{
+        speed = speed||5;
+        randomClip.r += 10;
+        if(randomClip.r>max){
+          clearInterval(change.timer);
+        }
+      }
+       cxt.restore();
+       cxt.clearRect(0,0,canvas.width,canvas.height);
+       cxt.beginPath();
+       cxt.arc(randomClip.x,randomClip.y,randomClip.r,0,Math.PI*2,false);
+       cxt.stroke();
+       cxt.save();
+       cxt.clip();
+       cxt.drawImage(img,0,0,canvas.width,canvas.height);
+    }
+    //change
+    function change(){
+      clearInterval(change.timer);
+      change.timer = setInterval(function(){
+           randomClip(true);
+      },30);
+    }
+  </script>
+</body>
+</html>

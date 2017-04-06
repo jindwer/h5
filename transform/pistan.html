@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>piston animation</title>
+  <style media="screen">
+    *{
+      margin:0;
+      padding:0;
+    }
+    html,body{
+      width:100%;
+      height:100%;
+      background:linear-gradient(to bottom,coral,tomato);
+    }
+    .box{
+      width:650px;
+      height:400px;
+      margin: 200px auto;
+    }
+    .piston{
+      position: relative;
+      width:100px;
+      background:rgba(0, 0, 0, 0.1);
+    }
+    .piston:nth-child(2){
+      left:120px;
+    }
+    .piston:nth-child(3){
+      left:240px;
+    }
+    .piston:nth-child(4){
+      left:360px;
+    }
+    .piston:nth-child(5){
+      left:480px;
+    }
+    .cylinder{
+      position: absolute;
+      z-index:4;
+      width:100px;
+      height:300px;
+      border-radius:0 0 50px 50px;
+      background:rgba(0, 0, 0, 0.2);
+      box-shadow:0 -4px 0 rgba(0, 0, 0, .2),0 0 20px rgba(0, 0, 0, 0.3) inset;
+    }
+    .plug{
+      position: absolute;
+      z-index:9;
+      left:1px;
+      top:0px;
+      width:98px;
+      height:50px;
+      line-height:50px;
+      font-size:20px;
+      font-weight:bold;
+      color:#555;
+      text-align: center;
+      text-shadow: -1px -1px 1px #000,1px 1px 1px #fff;
+      background:#555;
+      box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.3) inset,0 5px 5px rgba(255, 255, 255, 0.4) inset;
+      border-radius:5px;
+    }
+    .drive{
+      position: absolute;
+      top:200px;
+      width:60px;
+      height:60px;
+      border:20px solid rgba(0, 0, 0, .3);
+      box-shadow:0 0 10px rgba(255,255,255,.5) inset,0 0 10px rgba(255,255,255,.6);
+      border-radius:50%;
+    }
+    .rod{
+      position: absolute;
+      top:30px;
+      left:40px;
+      z-index: 3;
+      width:20px;
+      height:190px;
+      border-radius:10px;
+      background:#555;
+      box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.3) inset,5px 0 5px rgba(255, 255, 255, 0.4) inset;
+      transform-origin: center top;
+      animation-name: rod-run;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      transform: rotateZ(0deg);
+    }
+    .circle{
+      position: absolute;
+      bottom:3px;
+      left:2px;
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      background:rgba(255, 255, 255, 0.4);
+      box-shadow: -8px 0px 5px rgba(0, 0, 0, 0.4) inset,5px 0 5px rgba(255, 255, 255, 0.2) inset;
+    }
+    .p-box{
+      position: absolute;
+      animation-name: plug-run;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-timing-function: cubic-bezier(0.42, 0, 0.48, 1);
+      transform: rotateZ(0deg);
+    }
+    @keyframes rod-run{
+      0%{
+        transform: rotateZ(0deg);
+        box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.3) inset,5px 0 5px rgba(255, 255, 255, 0.4) inset;
+      }
+      25%{
+        transform:rotateZ(-12.6deg);
+        box-shadow: -9px 0px 5px rgba(0, 0, 0, 0.3) inset,2px 0 5px rgba(255, 255, 255, 0.4) inset;
+      }
+      50%{
+        transform:rotateZ(0deg);
+        box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.3) inset,5px 0 5px rgba(255, 255, 255, 0.4) inset;
+      }
+      75%{
+        transform:rotateZ(13deg);
+        box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3) inset,9px 0 5px rgba(255, 255, 255, 0.4) inset;
+      }
+      100%{
+        transform:rotateZ(0deg);
+        box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.3) inset,5px 0 5px rgba(255, 255, 255, 0.4) inset;
+      }
+    }
+    @keyframes plug-run{
+      0%{
+        transform: translateY(0px);
+      }
+      50%{
+        transform: translateY(80px);
+      }
+      100%{
+        transform: translateY(0px);
+      }
+    }
+    .piston:nth-child(2) .p-box{
+      animation-duration: 2s;
+      animation-delay: .2s;
+    }
+    .piston:nth-child(2) .p-box .rod{
+      animation-duration: 2s;
+      animation-delay: .2s;
+    }
+    .piston:nth-child(3) .p-box{
+      animation-duration: 2s;
+      animation-delay: .4s;
+    }
+    .piston:nth-child(3) .p-box .rod{
+      animation-duration: 2s;
+      animation-delay: .4s;
+    }
+    .piston:nth-child(4) .p-box{
+      animation-duration: 2s;
+      animation-delay: .6s;
+    }
+    .piston:nth-child(4) .p-box .rod{
+      animation-duration: 2s;
+      animation-delay: .6s;
+    }
+    .piston:nth-child(5) .p-box{
+      animation-duration: 2s;
+      animation-delay: .8s;
+    }
+    .piston:nth-child(5) .p-box .rod{
+      animation-duration: 2s;
+      animation-delay: .8s;
+    }
+  </style>
+</head>
+<body>
+  <button type="button" id="fast">快速</button>
+  <button type="button" id="slow">慢速</button>
+  <div class="box">
+      <div class="piston">
+           <div class="cylinder"></div>
+           <div class="drive"></div>
+           <div class="p-box">
+             <div class="plug">R</div>
+             <div class="rod">
+                 <div class="circle">
+
+                 </div>
+             </div>
+           </div>
+      </div>
+      <div class="piston">
+           <div class="cylinder"></div>
+           <div class="drive">
+
+           </div>
+           <div class="p-box">
+             <div class="plug">O</div>
+             <div class="rod">
+                 <div class="circle">
+
+                 </div>
+             </div>
+           </div>
+      </div>
+      <div class="piston">
+           <div class="cylinder"></div>
+           <div class="drive">
+
+           </div>
+           <div class="p-box">
+             <div class="plug">B</div>
+             <div class="rod">
+                 <div class="circle">
+
+                 </div>
+             </div>
+           </div>
+      </div>
+      <div class="piston">
+           <div class="cylinder"></div>
+           <div class="drive">
+
+           </div>
+           <div class="p-box">
+             <div class="plug">O</div>
+             <div class="rod">
+                 <div class="circle">
+
+                 </div>
+             </div>
+           </div>
+      </div>
+      <div class="piston">
+           <div class="cylinder"></div>
+           <div class="drive">
+
+           </div>
+           <div class="p-box">
+             <div class="plug">T</div>
+             <div class="rod">
+                 <div class="circle">
+
+                 </div>
+             </div>
+           </div>
+      </div>
+  </div>
+  <script src="jquery-3.1.1.min.js"></script>
+  <script type="text/javascript">
+     $(function(){
+       var $fast = $('#fast');
+       var $slow = $('#slow');
+       var $piston = $('.piston');
+       var ti      = 6;
+       $fast.click(function(){
+         ti = ti*0.5;
+         $piston.find('.p-box').css({
+           "animation-duration":ti+"s",
+         }).find('.rod').css({
+           "animation-duration":ti+"s",
+         });
+       });
+       $slow.click(function(){
+         ti = ti*2;
+         $piston.find('.p-box').css({
+           "animation-duration":ti+"s",
+         }).find('.rod').css({
+           "animation-duration":ti+"s",
+         });
+       });
+     });
+  </script>
+</body>
+</html>

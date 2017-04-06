@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>原生js　banner图</title>
+  <style media="screen">
+    *{
+      margin:0;
+      padding:0;
+    }
+    .container{
+      width:1226px;
+      height:460px;
+      margin:100px auto;
+      position:relative;
+      overflow: hidden;
+    }
+    ul li{
+      list-style: none;
+      float:left;
+    }
+    ul:after{
+      content:"";
+      display:block;
+      height:0;
+      clear:both;
+    }
+    #img-box{
+      position: absolute;
+      width:6130px;
+      top:0;
+      left:0;
+    }
+    #img-box li{
+      width:1226px;
+      height:100%;
+    }
+    #img-box li a{
+      display:block;
+
+    }
+    #img-point{
+      position: absolute;
+      bottom:20px;
+      right:50px;
+    }
+    #img-point li{
+      width:10px;
+      height:10px;
+      background:rgba(0, 0, 0, 0.5);
+      border:2px solid white;
+      margin-left:10px;
+      cursor: pointer;
+      border-radius:50%;
+    }
+    #img-point li.active{
+      background:white;
+      border-color:rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <ul id="img-box">
+      <li>
+        <a href="#">
+          <img src="http://i3.mifile.cn/a4/xmad_14890540335855_wTxbY.jpg" alt="" />
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <img src="http://i3.mifile.cn/a4/xmad_14901918267935_MsnvK.jpg" alt="" />
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <img src="http://i3.mifile.cn/a4/xmad_14900670114626_hSaDE.jpg" alt="" />
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <img src="http://i3.mifile.cn/a4/xmad_14889653089832_lSZoz.jpg" alt="" />
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <img src="http://i3.mifile.cn/a4/xmad_14901763921008_mXDyA.jpg" alt="" />
+        </a>
+      </li>
+    </ul>
+    <ul id="img-point">
+      <li class="active"></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+<script type="text/javascript">
+
+  //获得元素的属性
+  Object.prototype.getStyle = function(attr){
+    return this.currentStyle?this.currentStyle[attr]:window.getComputedStyle(this)[attr];
+  }
+
+  var imgBox  = document.getElementById('img-box');
+  imgBox.index = 0;
+  var imgLi   = imgBox.children;
+  var pointLi = document.getElementById('img-point').children;//是个伪数组，类似arguments，是具有length属性的对象
+  var len = pointLi.length;
+  var step = parseInt(imgLi[0].getStyle('width'));
+
+  getStart();
+
+  //banner动画效果展现函数
+  function move(obj,target){
+    clearInterval(obj.timer);
+    obj.timer = setInterval(function(){
+      obj.spend = (target-obj.offsetLeft)/10;
+      obj.spend = obj.spend>0?Math.ceil(obj.spend):Math.floor(obj.spend);
+      obj.style.left = obj.offsetLeft+obj.spend+"px";
+      if(obj.offsetLeft==target){
+        clearInterval(obj.timer);
+        return;
+      }
+    },30);
+  };
+
+  //绑定point
+  for(var i=0;i<len;i++){
+    (function(i){
+      pointLi[i].onmouseover = function(){
+        clearInterval(getStart.timer);
+        imgBox.index = i;
+        
+        Array.prototype.forEach.call(pointLi,function(cur){cur.className="";});
+        this.className = "active";
+        move(imgBox,-imgBox.index*step);
+      };
+
+      pointLi[i].onmouseout = function(){
+           getStart();
+      }
+    })(i);
+  }
+
+  //自动播放函数
+  function getStart(){
+    getStart.timer = setInterval(function(){
+      imgBox.index = imgBox.index>=len-1?0:imgBox.index+1;
+
+      Array.prototype.forEach.call(pointLi,function(cur){cur.className="";});
+      pointLi[imgBox.index].className = "active";
+      move(imgBox,-step*imgBox.index);
+    },3000);
+  }
+</script>
+</body>
+</html>
